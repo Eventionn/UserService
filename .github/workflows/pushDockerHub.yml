@@ -31,5 +31,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            a23893/userservice:latest  # Adicionando a tag 'latest'
+            ${{ steps.meta.outputs.tags }}  # Manter as tags geradas pelo metadata-action
           labels: ${{ steps.meta.outputs.labels }}
