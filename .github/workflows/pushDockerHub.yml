@@ -1,6 +1,8 @@
 name: Publish Docker image
 
 on:
+  release:
+    types: [published]
   push:  
     branches:
       - main  
@@ -31,7 +33,5 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
-            a23893/userservice:latest  # Adicionando a tag 'latest'
-            ${{ steps.meta.outputs.tags }}  # Manter as tags geradas pelo metadata-action
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
