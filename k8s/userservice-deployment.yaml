@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: userservice
-        image: a23893/userservice 
+        image: a23893/userservice:main 
         ports:
         - containerPort: 5001
