@@ -11,8 +11,50 @@ generator client {
   binaryTargets = ["native", "linux-musl"]
 }
 
+
 model User {
-  id      Int      @default(autoincrement()) @id
-  email   String   @unique
-  name    String?
+  userID      String   @id @default(uuid()) 
+  username    String   @db.VarChar(20)
+  phone       String   @db.VarChar(15)
+  email       String   @db.VarChar(50) @unique
+  password    String   @db.VarChar(50)
+  status      Boolean  @default(true) 
+  createdAt   DateTime @default(now())
+  loginType   String   
+  userType    UserType @relation(fields: [usertype_id], references: [userTypeID])
+  usertype_id String   @db.Uuid
+  address     Address?
+
+  @@map("Users") 
+}
+
+model UserType {
+  userTypeID String @id @default(uuid()) 
+  type       String @db.VarChar(20)
+  users      User[] 
+
+  @@map("UserTypes") 
+}
+
+model Address {
+  addressID    String   @id @default(uuid())
+  road         String   @db.VarChar(20)
+  roadNumber   Int
+  postCode     String   @db.VarChar(20)
+  NIF          String?  @db.VarChar(20) 
+  localtown    Location @relation(fields: [localtown_id], references: [localtownID])
+  localtown_id Int
+  user         User     @relation(fields: [user_id], references: [userID])
+  user_id      String   @unique
+
+  @@map("Addresses") 
+}
+
+model Location {
+  localtownID Int       @id @default(autoincrement())
+  localtown   String    @db.VarChar(100)
+  city        String    @db.VarChar(20)
+  addresses   Address[] 
+
+  @@map("Locations") 
 }

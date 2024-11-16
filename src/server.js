@@ -1,15 +1,12 @@
 import express from "express"
 import { PrismaClient } from "@prisma/client"
+import dotenv from "dotenv";
 
 const app = express()
-const PORT = 3039
+dotenv.config();
+const PORT = process.env.PORT || 3000;
 
 const prisma = new PrismaClient({
-  // datasources: {
-  //   db: {
-  //     url: process.env.DATABASE_URL,  
-  //   },
-  // },
 });
 
 app.use(express.json());
