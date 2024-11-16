@@ -6,8 +6,9 @@ docker-compose up -d
 ```
 
 - Generate Migrations
+```
 npx prisma generate
-
+```
 
 ## Tech & framework used
 - [Docker](https://www.docker.com/), an open platform for developing, shipping, and running applications
