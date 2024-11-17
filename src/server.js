@@ -6,8 +6,7 @@ const app = express()
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-const prisma = new PrismaClient({
-});
+const prisma = new PrismaClient();
 //Teste
 app.use(express.json());
 
