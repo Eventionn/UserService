@@ -1,9 +1,10 @@
 import express from "express"
 import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv";
+import fs from 'fs';
+import path from 'path';
 import routes from "./routes/routes.js";
 import swaggerUi from "swagger-ui-express"; // Adicione esta linha
-import swaggerDocument from "../docs/swagger.json";
 
 const app = express()
 app.use(express.json());
