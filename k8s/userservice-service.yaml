@@ -12,4 +12,3 @@ spec:
     - protocol: TCP
       port: 5001        #Porta Interna Serviço 
       targetPort: 5001  #Porta Pod
-      nodePort: 31110   #Porta Externa
