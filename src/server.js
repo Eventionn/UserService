@@ -1,15 +1,16 @@
 import express from "express"
 import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv";
-import routes from './routes/routes';
-import swaggerDocument from '../docs/swagger.json';
+import routes from "./routes/routes.js";
+import swaggerUi from "swagger-ui-express"; // Adicione esta linha
+import swaggerDocument from "../docs/swagger.json" assert { type: "json" };
 
 const app = express()
 app.use(express.json());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-app.use('/api', routes);
+app.use("/api", routes);
 const prisma = new PrismaClient();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

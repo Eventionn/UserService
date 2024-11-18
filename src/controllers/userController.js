@@ -1,4 +1,4 @@
-module.exports = {
+const userController = {
 
   async getAllUsers(req, res) {
     try {
@@ -27,5 +27,5 @@ module.exports = {
     }
   },
 
-
-};
+}
+  export default userController;
