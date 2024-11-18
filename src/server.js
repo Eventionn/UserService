@@ -11,7 +11,7 @@ app.use(express.json());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-app.use("/api", routes);
+app.use('/api', routes);
 const prisma = new PrismaClient();
 
 
