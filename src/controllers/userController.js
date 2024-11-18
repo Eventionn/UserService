@@ -1,3 +1,6 @@
+import userService from "../services/userService.js";
+
+const userController = {
 /**
  * Create an user
  * @auth none
@@ -5,8 +8,6 @@
  * @bodyparam user User
  * @returns user User
  */
-const userController = {
-
   async getAllUsers(req, res) {
     try {
       const users = await userService.getAllUsers();

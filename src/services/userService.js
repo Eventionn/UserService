@@ -1,7 +1,8 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
-module.exports = {
+const userService = {
   async getAllUsers() {
     return prisma.user.findMany(); 
   },
@@ -12,3 +13,5 @@ module.exports = {
     });
   },
 };
+
+export default userService;
