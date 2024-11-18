@@ -1,3 +1,10 @@
+/**
+ * Create an user
+ * @auth none
+ * @route {POST} /users
+ * @bodyparam user User
+ * @returns user User
+ */
 const userController = {
 
   async getAllUsers(req, res) {
