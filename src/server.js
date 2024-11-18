@@ -1,14 +1,25 @@
 import express from "express"
 import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv";
+import routes from './routes/routes';
+import swaggerDocument from '../docs/swagger.json';
 
 const app = express()
+app.use(express.json());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
+app.use('/api', userRoutes);
 const prisma = new PrismaClient();
-//Teste
-app.use(express.json());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get('/api-docs', (req, res) => {
+  res.json({
+    swagger:
+      'the API documentation  is now available on https://realworld-temp-api.herokuapp.com/api',
+  });
+});
 
 app.get('/', (req, res) => {
   res.json('hello there')
