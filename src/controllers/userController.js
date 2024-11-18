@@ -10,6 +10,13 @@ module.exports = {
     }
   },
 
+/**
+ * Create an user
+ * @auth none
+ * @route {POST} /users
+ * @bodyparam user User
+ * @returns user User
+ */
   async createUser(req, res) {
     try {
       const newUser = await userService.createUser(req.body);
@@ -20,5 +27,5 @@ module.exports = {
     }
   },
 
-  
+
 };
