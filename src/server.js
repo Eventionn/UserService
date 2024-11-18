@@ -13,14 +13,16 @@ const PORT = process.env.PORT || 3000;
 app.use("/api", routes);
 const prisma = new PrismaClient();
 
+
+const swaggerDocument = JSON.parse(fs.readFileSync(path.resolve('docs/swagger.json')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('/api-docs', (req, res) => {
-  res.json({
-    swagger:
-      'the API documentation  is now available on https://realworld-temp-api.herokuapp.com/api',
-  });
-});
+// app.get('/api-docs', (req, res) => {
+//   res.json({
+//     swagger:
+//       'the API documentation  is now available on https://realworld-temp-api.herokuapp.com/api',
+//   });
+// });
 
 app.get('/', (req, res) => {
   res.json('hello there')
