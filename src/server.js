@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv";
 import fs from 'fs';
 import path from 'path';
-import routes from "./routes/routes.js";
+import userRoutes from "./routes/routes.js";
 import swaggerUi from "swagger-ui-express"; // Adicione esta linha
 
 const app = express()
@@ -11,7 +11,7 @@ app.use(express.json());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-app.use('/api', routes);
+app.use('/api/users', userRoutes);
 const prisma = new PrismaClient();
 
 
