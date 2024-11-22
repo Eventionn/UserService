@@ -10,7 +10,7 @@
     }
   },
   "basePath": "/api",
-  "schemes": ["https", "http"],
+  "schemes": ["http"],
   "produces": ["application/json"],
   "consumes": ["application/json"],
   "securityDefinitions": {
@@ -212,18 +212,12 @@
           "type": "string"
         },
         "phone": {
-          "type": "string"
+          "type": "number"
         },
         "email": {
           "type": "string"
         },
         "password": {
-          "type": "string"
-        },
-        "loginType": {
-          "type": "string"
-        },
-        "userType": {
           "type": "string"
         }
       },

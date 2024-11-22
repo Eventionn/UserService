@@ -12,6 +12,17 @@ const userService = {
       data: userData,
     });
   },
+
+  async updateUser(id, updates) {
+    const user = await User.findByPk(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    Object.assign(user, updates); 
+    await user.save(); 
+    return user;
+  },
 };
 
 export default userService;
