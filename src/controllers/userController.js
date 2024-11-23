@@ -76,7 +76,7 @@ const userController = {
       res.status(500).json({ message: 'Error fetching users' });
     }
   },
-
+//
   async getUserById(req, res) {
     try {
       const { id } = req.params;
