@@ -1,7 +1,62 @@
 import userService from "../services/userService.js";
 import bcryptjs from "bcryptjs";
+import jwt from 'jsonwebtoken';
 
 const userController = {
+
+
+  async login(req, res) {
+    const { email, password } = req.body;
+
+    const user = await userService.findUserByEmail(email);
+    if (!user) 
+      return res.status(400).send("user not found");
+
+    if (await bcryptjs.compare(password, user.password)) {
+
+      const token = jwt.sign({ username: user.username, email:user.email, userType:user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+      return res.status(200).send({ token: token });
+
+  } else {
+      return res.status(400).send("email/password not match");
+  }
+  },
+
+  /**
+
+ */
+  async changePassword(req, res) {
+  const token = req.headers['token'];
+  console.log("token", token)
+  const { oldPassword, newPassword } = req.body;
+  console.log("token", token, oldPassword);
+  if (!token || !oldPassword || !newPassword) {
+      return res.status(400).send("token, old password and new password are required");
+  }
+  try {
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      console.log("teste", decoded)
+      const user = await userService.findUserByEmail({ email: decoded.email });
+
+      if (!user) {
+          return res.status(400).send("user not found");
+      }
+
+      if (await bcryptjs.compare(oldPassword, user.password)) {
+          const passwordHash = await bcryptjs.hash(newPassword, 10);
+
+          await userService.updateUser(user,{ username: user.username }, { password: passwordHash });
+
+          return res.status(200).send("password changed");
+      } else {
+          return res.status(400).send("old password not match");
+      }
+  } catch (error) {
+      console.log(error);
+      return res.status(400).send("invalid token");
+  }
+},
+
 /**
  * Get All user
  * @auth none
@@ -21,6 +76,46 @@ const userController = {
       res.status(500).json({ message: 'Error fetching users' });
     }
   },
+
+  async getUserById(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+
+      const user = await userService.findUserById(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error fetching user by ID" });
+    }
+  },
+
+  // Buscar usuário por email
+  async getUserByEmail(req, res) {
+    try {
+      const { email } = req.params;
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      const user = await userService.findUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error fetching user by email" });
+    }
+  },
+
 
 /**
  * Create an user
@@ -45,7 +140,6 @@ const userController = {
     }
     const passwordHash = await bcryptjs.hash(req.body.password, 10);
 
-console.log(passwordHash)
       const userData = {
         ...req.body,
         password: passwordHash,
@@ -94,7 +188,7 @@ async updateUser(req, res) {
       updates.password = await bcryptjs.hash(updates.password, 10);
     }
 
-    const updatedUser = await userService.updateUser(id, { username, phone, email, usertype_id });
+    const updatedUser = await userService.updateUser(existingUser, { username, phone, email, usertype_id });
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error(error);
@@ -102,7 +196,26 @@ async updateUser(req, res) {
   }
 },
 
+async softdeleteUser(req, res) {
+  try {
+    const { id } = req.params;
 
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const existingUser = await userService.findUserById(id);
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await userService.updateUser(id, { status: false }); 
+    res.status(200).json({ message: "User deactivated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deactivating user" });
+  }
+},
 
 async deleteUser(req, res) {
   try {
@@ -117,13 +230,14 @@ async deleteUser(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    await userService.updateUser(id, { status: false }); // Define o status como false
-    res.status(200).json({ message: "User deactivated successfully" });
+    await userService.deleteUserById(id); 
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error deactivating user" });
+    res.status(500).json({ message: "Error deleting user" });
   }
 },
+
 
 }
 

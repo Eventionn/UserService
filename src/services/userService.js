@@ -4,25 +4,39 @@ const prisma = new PrismaClient();
 
 const userService = {
   async getAllUsers() {
-    return prisma.user.findMany(); 
+    return await prisma.user.findMany(); 
   },
 
   async createUser(userData) {
-    return prisma.user.create({
+    return await prisma.user.create({
       data: userData,
     });
   },
 
-  async updateUser(id, updates) {
-    const user = await User.findByPk(id);
-    if (!user) {
-      throw new Error("User not found");
-    }
+  async findUserById(id) {
+    return await prisma.user.findUnique({
+      where: { id },
+    })
+  },
 
+  async findUserByEmail(email) {
+    return await prisma.user.findUnique({
+      where: { email },
+    })
+  },
+
+  async updateUser(user, updates) {
     Object.assign(user, updates); 
     await user.save(); 
     return user;
   },
+
+  async deleteUserById(id) {
+    await prisma.user.delete({
+      where: { id },
+    });
+  }
+  
 };
 
 export default userService;
