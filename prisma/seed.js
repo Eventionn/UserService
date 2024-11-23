@@ -9,9 +9,9 @@ const usersData = [ // we only have on user here
 ]
 
 const userTypesData = [
-  { type: 'Utilizador' },
-  { type: 'Anunciante' },
-  { type: 'Admin' },
+  { userTypeID: '2c6aab42-7274-424e-8c10-e95441cb95c3',type: 'Utilizador' },
+  { userTypeID: '123e4567-e89b-12d3-a456-426614174001',type: 'Anunciante' },
+  { userTypeID: '123e4567-e89b-12d3-a456-426614174002',type: 'Admin' },
 ];
 
 const main = async () => {
