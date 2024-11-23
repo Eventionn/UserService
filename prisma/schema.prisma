@@ -31,7 +31,6 @@ model UserType {
   userTypeID String @id @default(uuid()) @db.Uuid
   type       String @db.VarChar(20)
   users      User[] 
-
   @@map("UserTypes") 
 }
 
@@ -41,19 +40,9 @@ model Address {
   roadNumber   Int
   postCode     String   @db.VarChar(20)
   NIF          String?  @db.VarChar(20) 
-  localtown    Location @relation(fields: [localtown_id], references: [localtownID])
-  localtown_id Int
+  localtown_id String
   user         User     @relation(fields: [user_id], references: [userID])
   user_id      String   @unique
 
   @@map("Addresses") 
-}
-
-model Location {
-  localtownID Int       @id @default(autoincrement())
-  localtown   String    @db.VarChar(100)
-  city        String    @db.VarChar(20)
-  addresses   Address[] 
-
-  @@map("Locations") 
 }

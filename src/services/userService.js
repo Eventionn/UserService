@@ -26,9 +26,12 @@ const userService = {
   },
 
   async updateUser(user, updates) {
-    Object.assign(user, updates); 
-    await user.save(); 
-    return user;
+    const updatedUser = await prisma.user.update({
+      where: { userID: user.userID }, 
+      data: updates, 
+    });
+  
+    return updatedUser;
   },
 
   async deleteUserById(id) {

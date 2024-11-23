@@ -13,14 +13,6 @@
   "schemes": ["http"],
   "produces": ["application/json"],
   "consumes": ["application/json"],
-  "securityDefinitions": {
-    "Token": {
-      "description": "Provide a valid JWT token using the 'Authorization' header.\nFormat: Token: xxxxxx.yyyyy.zzzzz",
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    }
-  },
   "paths": {
     "/users": {
       "get": {
@@ -28,6 +20,11 @@
         "description": "Retrieve a list of all users",
         "tags": ["Users"],
         "operationId": "getAllUsers",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of users",
@@ -65,11 +62,16 @@
         }
       }
     },
-"/users/change-password": {
+    "/users/change-password": {
       "put": {
         "summary": "Change Password",
         "description": "Allow a user to change their password by providing their old password and a new password.",
         "tags": ["Users"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "body",
@@ -164,6 +166,11 @@
         "description": "Retrieve a user by their ID",
         "tags": ["Users"],
         "operationId": "getUserById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -186,6 +193,11 @@
         "description": "Permanently delete a user by ID",
         "tags": ["Users"],
         "operationId": "deleteUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -205,6 +217,11 @@
         "description": "Update the details of a user by ID",
         "tags": ["Users"],
         "operationId": "updateUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -224,54 +241,6 @@
         "responses": {
           "200": {
             "description": "User updated",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/users/byemail": {
-      "get": {
-        "summary": "Get user by email",
-        "description": "Retrieve a user by their email address",
-        "tags": ["Users"],
-        "operationId": "getUserByEmail",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User details",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/users/softdelete/{id}": {
-      "patch": {
-        "summary": "Soft delete a user",
-        "description": "Mark a user as inactive without permanently removing them",
-        "tags": ["Users"],
-        "operationId": "softDeleteUser",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User soft deleted",
             "schema": {
               "$ref": "#/definitions/User"
             }
@@ -332,6 +301,14 @@
         "password": { "type": "string" }
       },
       "required": ["email", "password"]
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Bearer token authentication"
     }
   }
 }

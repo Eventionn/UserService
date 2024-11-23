@@ -9,74 +9,73 @@ const userController = {
     const { email, password } = req.body;
 
     const user = await userService.findUserByEmail(email);
-    if (!user) 
+    if (!user)
       return res.status(400).send("user not found");
 
     if (await bcryptjs.compare(password, user.password)) {
 
-      const token = jwt.sign({ username: user.username, email:user.email, userType:user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+      console.log(user)
+      const token = jwt.sign({ username: user.username, email: user.email, userType: user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
       return res.status(200).send({ token: token });
 
-  } else {
+    } else {
       return res.status(400).send("email/password not match");
-  }
+    }
   },
 
-  /**
 
- */
   async changePassword(req, res) {
-  const token = req.headers['token'];
-  console.log("token", token)
-  const { oldPassword, newPassword } = req.body;
-  console.log("token", token, oldPassword);
-  if (!token || !oldPassword || !newPassword) {
+    const token = req.headers['token'];
+    console.log("token", token)
+    const { oldPassword, newPassword } = req.body;
+    console.log("token", token, oldPassword);
+    if (!token || !oldPassword || !newPassword) {
       return res.status(400).send("token, old password and new password are required");
-  }
-  try {
+    }
+    try {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
       console.log("teste", decoded)
       const user = await userService.findUserByEmail({ email: decoded.email });
 
       if (!user) {
-          return res.status(400).send("user not found");
+        return res.status(400).send("user not found");
       }
 
       if (await bcryptjs.compare(oldPassword, user.password)) {
-          const passwordHash = await bcryptjs.hash(newPassword, 10);
+        const passwordHash = await bcryptjs.hash(newPassword, 10);
 
-          await userService.updateUser(user,{ username: user.username }, { password: passwordHash });
+        await userService.updateUser(user, { username: user.username }, { password: passwordHash });
 
-          return res.status(200).send("password changed");
+        return res.status(200).send("password changed");
       } else {
-          return res.status(400).send("old password not match");
+        return res.status(400).send("old password not match");
       }
-  } catch (error) {
+    } catch (error) {
       console.log(error);
       return res.status(400).send("invalid token");
-  }
-},
+    }
+  },
 
-/**
- * Get All user
- * @auth none
- * @route {POST} /users
- * @bodyparam user User
- * @returns user User
- */
+  /**
+   * Get All user
+   * @auth none
+   * @route {POST} /users
+   * @bodyparam user User
+   * @returns user User
+   */
   async getAllUsers(req, res) {
     try {
       const users = await userService.getAllUsers();
       res.status(200).json(users);
 
-      if(users == null)
+      if (users == null)
         res.status(400).json("Not Found Any User");
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error fetching users' });
     }
   },
-//
+  //
   async getUserById(req, res) {
     try {
       const { id } = req.params;
@@ -117,43 +116,43 @@ const userController = {
   },
 
 
-/**
- * Create an user
- * @auth none
- * @route {POST} /users
- * @bodyparam user User
- * @returns user User
- */
+  /**
+   * Create an user
+   * @auth none
+   * @route {POST} /users
+   * @bodyparam user User
+   * @returns user User
+   */
   async createUser(req, res) {
     try {
       const defaultUserTypeId = '2c6aab42-7274-424e-8c10-e95441cb95c3';
 
       if (!req.body.email || !req.body.password || !req.body.username) {
         return res.status(userMessage.error.fieldMissing.http).send(userMessage.error.fieldMissing);
-    }
-    if (!req.body.password || req.body.password.length < 8) {
-      return res.status(400).send("password must be at least 8 characters");
-  }
-  const existingUser = await userService.findUserByEmail(req.body.email);
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-    const passwordHash = await bcryptjs.hash(req.body.password, 10);
+      }
+      if (!req.body.password || req.body.password.length < 8) {
+        return res.status(400).send("password must be at least 8 characters");
+      }
+      const existingUser = await userService.findUserByEmail(req.body.email);
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email already exists' });
+      }
+      const passwordHash = await bcryptjs.hash(req.body.password, 10);
 
       const userData = {
         ...req.body,
         password: passwordHash,
-        usertype_id: defaultUserTypeId, 
+        usertype_id: defaultUserTypeId,
         status: true,
         createdAt: new Date(),
         loginType: "simple"
       };
 
-      
+
       const newUser = await userService.createUser(userData);
       res.status(201).json(newUser);
     } catch (error) {
-      
+
       console.error(error);
       res.status(500).json({ message: 'Error creating user' });
     }
@@ -167,80 +166,73 @@ const userController = {
  * @bodyparam user Partial<User>
  * @returns user User
  */
-async updateUser(req, res) {
-  try {
-    const { id } = req.params;
-    const { username, phone, email, usertype_id } = req.body;
-
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    const existingUser = await userService.findUserById(id);
-    if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (updates.password) {
-      if (updates.password.length < 8) {
-        return res.status(400).send("Password must be at least 8 characters");
+  async updateUser(req, res) {
+    try {
+      const { id } = req.params;
+      const { username, phone, email, usertype_id } = req.body;
+      console.log(phone)
+      if (!id) {
+        return res.status(400).json({ message: "User ID is required" });
       }
-      updates.password = await bcryptjs.hash(updates.password, 10);
+
+      const existingUser = await userService.findUserById(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const updatedUser = await userService.updateUser(existingUser, { username, phone, email, usertype_id });
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error updating user" });
     }
+  },
 
-    const updatedUser = await userService.updateUser(existingUser, { username, phone, email, usertype_id });
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating user" });
-  }
-},
+  async softdeleteUser(req, res) {
+    try {
+      const { id } = req.params;
 
-async softdeleteUser(req, res) {
-  try {
-    const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
 
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required" });
+      const existingUser = await userService.findUserById(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await userService.updateUser(id, { status: false });
+      res.status(200).json({ message: "User deactivated successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error deactivating user" });
     }
+  },
 
-    const existingUser = await userService.findUserById(id);
-    if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
+  async deleteUser(req, res) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+
+      const existingUser = await userService.findUserById(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await userService.deleteUserById(id);
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error deleting user" });
     }
-
-    await userService.updateUser(id, { status: false }); 
-    res.status(200).json({ message: "User deactivated successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error deactivating user" });
-  }
-},
-
-async deleteUser(req, res) {
-  try {
-    const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    const existingUser = await userService.findUserById(id);
-    if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    await userService.deleteUserById(id); 
-    res.status(200).json({ message: "User deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error deleting user" });
-  }
-},
+  },
 
 
 }
 
 
 
-  export default userController;
+export default userController;
