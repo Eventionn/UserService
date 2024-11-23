@@ -15,7 +15,7 @@ const userService = {
 
   async findUserById(id) {
     return await prisma.user.findUnique({
-      where: { id },
+      where: { userID: id },
     })
   },
 
@@ -33,7 +33,7 @@ const userService = {
 
   async deleteUserById(id) {
     await prisma.user.delete({
-      where: { id },
+      where: { userID: id },
     });
   }
   
