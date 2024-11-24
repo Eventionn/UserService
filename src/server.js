@@ -26,7 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // });
 
 app.get('/', (req, res) => {
-  res.json('hello there')
+  res.json('hello there!!!')
 })
 
 app.get('/users', async (req, res) => {
@@ -44,4 +44,3 @@ const server = app.listen(PORT, () => {
 
 export { app, server };
 
-//ISTO É UM TESTE DE ACTION
