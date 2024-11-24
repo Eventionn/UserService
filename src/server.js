@@ -42,4 +42,5 @@ app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`)
 })
 
+export default app
 //ISTO É UM TESTE DE ACTION

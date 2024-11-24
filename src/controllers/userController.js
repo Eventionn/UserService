@@ -106,17 +106,18 @@ const userController = {
    */
   async createUser(req, res) {
     try {
+      
       const defaultUserTypeId = '2c6aab42-7274-424e-8c10-e95441cb95c3';
 
       if (!req.body.email || !req.body.password || !req.body.username) {
-        return res.status(userMessage.error.fieldMissing.http).send(userMessage.error.fieldMissing);
+        return res.status(400).send("Field missing");
       }
       if (!req.body.password || req.body.password.length < 8) {
         return res.status(400).send("password must be at least 8 characters");
       }
       const existingUser = await userService.findUserByEmail(req.body.email);
       if (existingUser) {
-        return res.status(400).json({ message: 'Email already exists' });
+        return res.status(400).send("Email Already Exists");
       }
       const passwordHash = await bcryptjs.hash(req.body.password, 10);
 
