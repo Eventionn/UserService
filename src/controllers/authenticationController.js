@@ -6,7 +6,7 @@ import mailService from "../services/mailService.js";
 const authController = {
     async login(req, res) {
         const { email, password } = req.body;
-    
+        console.log('teste')
         const user = await userService.findUserByEmail(email);
         if (!user)
           return res.status(400).send("user not found");
