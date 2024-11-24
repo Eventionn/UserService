@@ -5,30 +5,11 @@ import jwt from 'jsonwebtoken';
 const userController = {
 
 
-  async login(req, res) {
-    const { email, password } = req.body;
-
-    const user = await userService.findUserByEmail(email);
-    if (!user)
-      return res.status(400).send("user not found");
-
-    if (await bcryptjs.compare(password, user.password)) {
-
-      console.log(user)
-      const token = jwt.sign({ username: user.username, email: user.email, userType: user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
-      return res.status(200).send({ token: token });
-
-    } else {
-      return res.status(400).send("email/password not match");
-    }
-  },
-
-
   async changePassword(req, res) {
     const token = req.headers['token'];
-    console.log("token", token)
     const { oldPassword, newPassword } = req.body;
-    console.log("token", token, oldPassword);
+
+    
     if (!token || !oldPassword || !newPassword) {
       return res.status(400).send("token, old password and new password are required");
     }
