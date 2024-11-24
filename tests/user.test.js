@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const userService = require('../src/services/userService');
 const { faker } = require('@faker-js/faker');
-import app from '../src/server';
+import { app, server } from '../src/server';
 const request = require('supertest');
 
 const randomEmail = faker.internet.email();
@@ -40,6 +40,11 @@ describe('POST /api/users', () => {
     expect(res.status).toBe(201);
     expect(res.body.username).toBe('testuser');
     expect(res.body).toHaveProperty('createdAt');
+  });
+
+
+  afterAll(() => {
+    server.close();  // Fecha o servidor quando os testes terminarem
   });
 
 });

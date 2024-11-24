@@ -38,9 +38,10 @@ app.get('/users', async (req, res) => {
   }
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`)
 })
 
-export default app
+export { app, server };
+
 //ISTO É UM TESTE DE ACTION
