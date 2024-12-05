@@ -2,6 +2,13 @@ import bcryptjs from "bcryptjs";
 import jwt from 'jsonwebtoken';
 import userService from "../services/userService.js";
 import mailService from "../services/mailService.js";
+import redis from 'redis';
+
+const redisClient = redis.createClient({
+  url: "redis://userservice-redis-service:6379",
+});
+
+redisClient.connect();
 
 const authController = {
     async login(req, res) {
@@ -69,9 +76,21 @@ const authController = {
           console.error(error);
           return res.status(400).send("Invalid or expired token");
         }
-      }
+      },
 
+      async logout(req, res) {
+        const token = req.headers['token'];
+        if (!token) return res.status(401).send("Token not provided");
+    
+        try {
 
+          await redisClient.sAdd("blacklistedTokens", token);
+          return res.status(200).send("Logout successful");
+        } catch (err) {
+          console.error("Error during logout:", err);
+          return res.status(500).send("Error during logout");
+        }
+      },
 
 }
 

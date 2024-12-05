@@ -45,37 +45,6 @@ describe('User Controller Tests', () => {
     });
   });
 
-//   describe('PUT /api/users/:id', () => {
-//     it('should return 200 and update the user successfully', async () => {
-//       const mockUser = { userID: "1", email: 'test@example.com', username: 'user1' };
-//       const updatedUser = { ...mockUser, username: 'updatedUser' };
-
-//       prisma.user.findUnique.mockResolvedValue(mockUser);
-//       prisma.user.update.mockResolvedValue(updatedUser);
-
-//       const res = await request(app)
-//         .put('/api/users/1')
-//         .send({ username: 'updatedUser' });
-
-//       expect(res.status).toBe(200);
-//       expect(res.body).toEqual(updatedUser);
-//       expect(prisma.user.update).toHaveBeenCalledWith({
-//         where: { userID: "1" },
-//         data: { username: 'updatedUser' },
-//       });
-//     });
-
-//     it('should return 404 if user to update is not found', async () => {
-//       prisma.user.findUnique.mockResolvedValue(null);
-
-//       const res = await request(app)
-//         .put('/api/users/999')
-//         .send({ username: 'nonexistentUser' });
-
-//       expect(res.status).toBe(404);
-//       expect(res.body).toEqual({ message: 'User not found' });
-//     });
-//   });
 
   describe('DELETE /api/users/:id', () => {
     it('should return 200 and delete the user successfully', async () => {

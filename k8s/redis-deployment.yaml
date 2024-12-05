@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: userservice-redis
+  labels:
+    app: userservice-redis
+spec:
+  serviceName: "userservice-redis-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice-redis
+  template:
+    metadata:
+      labels:
+        app: userservice-redis
+    spec:
+      containers:
+        - name: userservice-redis
+          image: redis:alpine
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          command: ["redis-server", "--appendonly", "yes"]
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice-redis-service
+  labels:
+    app: userservice-redis
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: userservice-redis
