@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: a23893/userservicee
+          images: a23893/userservice
           tags: |
             type=ref,event=branch
             type=raw,value=latest
