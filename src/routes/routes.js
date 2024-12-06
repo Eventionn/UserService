@@ -1,4 +1,5 @@
 import { Router } from "express";
+import fileUpload from "express-fileupload";
 import userController from "../controllers/userController.js";
 import authController from "../controllers/authenticationController.js";
 import {verifyToken }from "../middlewares/authMiddleware.js";
@@ -6,6 +7,7 @@ import { verifyAdmin } from "../middlewares/adminMiddleware.js";
 import {verifyAdvertiser} from "../middlewares/advertiserMiddleware.js";
 
 const router = Router();
+router.use(fileUpload());
 
 router.get('/', verifyToken, verifyAdmin, userController.getAllUsers);
 router.post('/', userController.createUser);

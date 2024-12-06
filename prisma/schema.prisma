@@ -23,6 +23,7 @@ model User {
   userType    UserType @relation(fields: [usertype_id], references: [userTypeID])
   usertype_id String   @db.Uuid
   address     Address?
+  profilePicture  String?  @db.VarChar(255)
 
   @@map("Users") 
 }

@@ -76,7 +76,7 @@ const userController = {
     }
   },
 
-  // Buscar usuário por email
+
   async getUserByEmail(req, res) {
     try {
       const { email } = req.params;
@@ -151,7 +151,7 @@ const userController = {
   async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { username, phone, email, usertype_id } = req.body;
+      const { username, phone, email } = req.body;
       console.log(phone)
       if (!id) {
         return res.status(400).json({ message: "User ID is required" });
@@ -162,7 +162,28 @@ const userController = {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const updatedUser = await userService.updateUser(existingUser, { username, phone, email });
+      let profilePicturePath = existingUser.profilePicture;
+
+      // Lidar com o upload da imagem
+      if (req.files && req.files.profilePicture) {
+        const profilePicture = req.files.profilePicture;
+  
+        // Validar tipo de arquivo (opcional)
+        const allowedExtensions = /png|jpeg|jpg/;
+        const fileExtension = path.extname(profilePicture.name).toLowerCase();
+        if (!allowedExtensions.test(fileExtension)) {
+          return res.status(400).json({ message: "Invalid file type. Only PNG, JPEG, and JPG are allowed." });
+        }
+  
+        // Gerar caminho para salvar a imagem
+        const uploadPath = path.join(__dirname, '../public/uploads/profile_pictures', `${id}-${Date.now()}${fileExtension}`);
+        await profilePicture.mv(uploadPath); // Salvar arquivo
+  
+        // Atualizar o caminho da imagem
+        profilePicturePath = `/uploads/profile_pictures/${path.basename(uploadPath)}`;
+      }
+
+      const updatedUser = await userService.updateUser(existingUser, { username, phone, email,profilePicture: profilePicturePath });
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error(error);
