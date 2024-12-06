@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: userservice
-        image: a23893/userservicee:main 
+        image: a23893/userservice:main 
         ports:
         - containerPort: 5001
         env:
