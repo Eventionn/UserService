@@ -10,6 +10,7 @@ const router = Router();
 router.get('/', verifyToken, verifyAdmin, userController.getAllUsers);
 router.post('/', userController.createUser);
 router.post('/login', authController.login);
+router.post('/logout', authController.logout);
 router.post('/send-reset-token', authController.sendResetToken);
 router.post('/reset-password', authController.resetPassword);
 router.get('/:id', userController.getUserById); 
