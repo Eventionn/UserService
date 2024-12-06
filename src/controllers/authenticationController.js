@@ -79,7 +79,7 @@ const authController = {
       },
 
       async logout(req, res) {
-        const token = req.headers['token'];
+        const token = req.headers['authorization'];
         if (!token) return res.status(401).send("Token not provided");
     
         try {
