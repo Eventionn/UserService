@@ -42,7 +42,7 @@ model Address {
   NIF          String?  @db.VarChar(20) 
   localtown_id String
   user         User     @relation(fields: [user_id], references: [userID])
-  user_id      String   @unique
+  user_id      String   @unique @db.Uuid
 
   @@map("Addresses") 
 }
