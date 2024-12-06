@@ -655,9 +655,6 @@
         },
         "email": {
           "type": "string"
-        },
-        "usertype_id": {
-          "type": "string"
         }
       }
     },

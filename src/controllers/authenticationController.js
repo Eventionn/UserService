@@ -53,7 +53,6 @@ const authController = {
         }
       },
       
-      // 2. Redefinir senha
       async resetPassword(req, res) {
         const { token, newPassword } = req.body;
       

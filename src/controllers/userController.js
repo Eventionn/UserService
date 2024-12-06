@@ -162,7 +162,7 @@ const userController = {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const updatedUser = await userService.updateUser(existingUser, { username, phone, email, usertype_id });
+      const updatedUser = await userService.updateUser(existingUser, { username, phone, email });
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error(error);
