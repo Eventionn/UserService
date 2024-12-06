@@ -148,500 +148,541 @@
         }
       }
     },
-        "/users": {
-          "get": {
-            "summary": "Get all users",
-            "description": "Retrieve a list of all users",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "getAllUsers",
-            "security": [
-              {
-                "bearerAuth": []
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "List of users",
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/User"
-                  }
+    "/users/logout": {
+      "post": {
+        "summary": "Logout a user",
+        "description": "Invalidate the user's current session or JWT token.",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "logoutUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Logout successful"
                 }
               }
             }
           },
-          "post": {
-            "summary": "Create a new user",
-            "description": "Add a new user to the system",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "createUser",
-            "parameters": [
-              {
-                "name": "body",
-                "in": "body",
-                "required": true,
-                "schema": {
-                  "$ref": "#/definitions/NewUserRequest"
-                }
-              }
-            ],
-            "responses": {
-              "201": {
-                "description": "User created",
-                "schema": {
-                  "$ref": "#/definitions/UserResponse"
-                }
-              }
-            }
-          }
-        },
-        "/users/softdelete/{id}": {
-          "patch": {
-            "summary": "Soft Delete User",
-            "description": "Soft deletes a user by setting their status to inactive.",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "softdeleteUser",
-            "parameters": [
-              {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "type": "string",
-                "description": "ID of the user to soft delete"
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "User successfully soft deleted",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User successfully soft deleted"
-                    }
-                  }
-                }
-              },
-              "404": {
-                "description": "User not found",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              },
-              "500": {
-                "description": "Error soft deleting user",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Error soft deleting user"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "/users/byemail": {
-          "get": {
-            "summary": "Get User by Email",
-            "description": "Retrieve a user by their email address.",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "getUserByEmail",
-            "parameters": [
-              {
-                "name": "email",
-                "in": "query",
-                "required": true,
-                "type": "string",
-                "description": "Email of the user to retrieve"
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "User details",
-                "schema": {
-                  "$ref": "#/definitions/User"
-                }
-              },
-              "404": {
-                "description": "User not found",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              },
-              "500": {
-                "description": "Error retrieving user",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Error retrieving user"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "/users/change-password": {
-          "put": {
-            "summary": "Change Password",
-            "description": "Allow a user to change their password by providing their old password and a new password.",
-            "tags": [
-              "Users"
-            ],
-            "security": [
-              {
-                "bearerAuth": []
-              }
-            ],
-            "parameters": [
-              {
-                "name": "body",
-                "in": "body",
-                "required": true,
-                "schema": {
-                  "$ref": "#/definitions/ChangePassword"
-                }
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "Password changed successfully",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Password changed successfully"
-                    }
-                  }
-                }
-              },
-              "401": {
-                "description": "Unauthorized - Invalid token",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Invalid token"
-                    }
-                  }
-                }
-              },
-              "404": {
-                "description": "Not Found - User not found",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              },
-              "400": {
-                "description": "Bad Request - Old password does not match",
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Old password does not match"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "/users/login": {
-          "post": {
-            "summary": "Login a user",
-            "description": "Authenticate a user with email and password",
-            "tags": [
-              "Authentication"
-            ],
-            "operationId": "loginUser",
-            "parameters": [
-              {
-                "name": "body",
-                "in": "body",
-                "required": true,
-                "schema": {
-                  "$ref": "#/definitions/LoginUserRequest"
-                }
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "Login successful",
-                "schema": {
-                  "$ref": "#/definitions/UserResponse"
-                }
-              }
-            }
-          }
-        },
-        "/users/{id}": {
-          "get": {
-            "summary": "Get user by ID",
-            "description": "Retrieve a user by their ID",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "getUserById",
-            "security": [
-              {
-                "bearerAuth": []
-              }
-            ],
-            "parameters": [
-              {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "type": "string"
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "User details",
-                "schema": {
-                  "$ref": "#/definitions/User"
-                }
-              }
-            }
-          },
-          "delete": {
-            "summary": "Delete a user",
-            "description": "Permanently delete a user by ID",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "deleteUser",
-            "security": [
-              {
-                "bearerAuth": []
-              }
-            ],
-            "parameters": [
-              {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "type": "string"
-              }
-            ],
-            "responses": {
-              "204": {
-                "description": "User deleted"
-              }
-            }
-          },
-          "put": {
-            "summary": "Update a user",
-            "description": "Update the details of a user by ID",
-            "tags": [
-              "Users"
-            ],
-            "operationId": "updateUser",
-            "security": [
-              {
-                "bearerAuth": []
-              }
-            ],
-            "parameters": [
-              {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "name": "body",
-                "in": "body",
-                "required": true,
-                "schema": {
-                  "$ref": "#/definitions/UpdateUserRequest"
-                }
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "User updated",
-                "schema": {
-                  "$ref": "#/definitions/User"
+          "401": {
+            "description": "Unauthorized - Invalid token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid token"
                 }
               }
             }
           }
         }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Get all users",
+        "description": "Retrieve a list of all users",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getAllUsers",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
       },
-      "definitions": {
-        "User": {
-          "type": "object",
-          "properties": {
-            "userID": {
-              "type": "string"
-            },
-            "username": {
-              "type": "string"
-            },
-            "phone": {
-              "type": "integer"
-            },
-            "email": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            },
-            "status": {
-              "type": "boolean"
-            },
-            "createdAt": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "loginType": {
-              "type": "string"
+      "post": {
+        "summary": "Create a new user",
+        "description": "Add a new user to the system",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewUserRequest"
             }
           }
-        },
-        "ResetTokenRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "example": "user@example.com"
-            }
-          },
-          "required": [
-            "email"
-          ]
-        },
-        "ResetPasswordRequest": {
-          "type": "object",
-          "properties": {
-            "token": {
-              "type": "string",
-              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-            },
-            "newPassword": {
-              "type": "string",
-              "example": "newSecurePassword123!"
-            }
-          },
-          "required": [
-            "token",
-            "newPassword"
-          ]
-        },
-        "ChangePassword": {
-          "type": "object",
-          "properties": {
-            "oldPassword": {
-              "type": "string"
-            },
-            "newPassword": {
-              "type": "string"
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
             }
           }
-        },
-        "UserResponse": {
-          "type": "object",
-          "properties": {
-            "user": {
+        }
+      }
+    },
+    "/users/softdelete/{id}": {
+      "patch": {
+        "summary": "Soft Delete User",
+        "description": "Soft deletes a user by setting their status to inactive.",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "softdeleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to soft delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully soft deleted",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User successfully soft deleted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error soft deleting user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error soft deleting user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/byemail": {
+      "get": {
+        "summary": "Get User by Email",
+        "description": "Retrieve a user by their email address.",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getUserByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Email of the user to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error retrieving user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error retrieving user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/change-password": {
+      "put": {
+        "summary": "Change Password",
+        "description": "Allow a user to change their password by providing their old password and a new password.",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChangePassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Password changed successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid token"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - User not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User not found"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Old password does not match",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Old password does not match"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "Login a user",
+        "description": "Authenticate a user with email and password",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get user by ID",
+        "description": "Retrieve a user by their ID",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getUserById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "schema": {
               "$ref": "#/definitions/User"
             }
           }
-        },
-        "NewUserRequest": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "username",
-            "email",
-            "password"
-          ]
-        },
-        "UpdateUserRequest": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "phone": {
-              "type": "integer"
-            },
-            "email": {
-              "type": "string"
-            },
-            "usertype_id": {
-              "type": "string"
-            }
-          }
-        },
-        "LoginUserRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "email",
-            "password"
-          ]
         }
       },
-      "securityDefinitions": {
-        "bearerAuth": {
-          "type": "apiKey",
-          "name": "Authorization",
-          "in": "header",
-          "description": "Bearer token authentication"
+      "delete": {
+        "summary": "Delete a user",
+        "description": "Permanently delete a user by ID",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "deleteUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a user",
+        "description": "Update the details of a user by ID",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "updateUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
         }
       }
     }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userID": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "status": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "loginType": {
+          "type": "string"
+        }
+      }
+    },
+    "ResetTokenRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "user@example.com"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "ResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        },
+        "newPassword": {
+          "type": "string",
+          "example": "newSecurePassword123!"
+        }
+      },
+      "required": [
+        "token",
+        "newPassword"
+      ]
+    },
+    "ChangePassword": {
+      "type": "object",
+      "properties": {
+        "oldPassword": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "NewUserRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "password"
+      ]
+    },
+    "UpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "usertype_id": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginUserRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Bearer token authentication"
+    }
+  }
+}
