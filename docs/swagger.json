@@ -507,82 +507,76 @@
           }
         }
       },
-"put": {
-  "summary": "Update a user",
-  "description": "Update the details of a user by ID, including optional profile picture upload",
-  "tags": [
-    "Users"
-  ],
-  "operationId": "updateUser",
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
-  "parameters": [
-    {
-      "name": "id",
-      "in": "path",
-      "required": true,
-      "schema": {
-        "type": "string"
-      },
-      "description": "ID of the user to update"
-    }
-  ],
-  "requestBody": {
-    "required": true,
-    "content": {
-      "multipart/form-data": {
-        "schema": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string",
-              "description": "Updated username"
+      "put": {
+        "summary": "Update a user",
+        "description": "Update the details of a user by ID, including optional profile picture upload",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "updateUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             },
-            "phone": {
-              "type": "integer",
-              "description": "Updated phone number"
-            },
-            "email": {
-              "type": "string",
-              "description": "Updated email address"
-            },
-            "profilePicture": {
-              "type": "string",
-              "format": "binary",
-              "description": "Profile picture file to upload"
+            "description": "ID of the user to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the user"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email of the user"
+                  },
+                  "profilePicture": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Profile picture file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
             }
           },
-          "required": ["username", "email"]
-        }
-      }
-    }
-  },
-  "responses": {
-    "200": {
-      "description": "User updated successfully",
-      "content": {
-        "application/json": {
-          "schema": {
-            "$ref": "#/definitions/User"
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
-    },
-    "400": {
-      "description": "Invalid request parameters"
-    },
-    "404": {
-      "description": "User not found"
-    },
-    "500": {
-      "description": "Internal server error"
-    }
-  }
-}
-
     }
   },
   "definitions": {
@@ -695,7 +689,10 @@
         "email": {
           "type": "string"
         },
-        "profilePicture": { "type": "string", "format": "binary" }
+        "profilePicture": {
+          "type": "string",
+          "format": "binary"
+        }
       }
     },
     "LoginUserRequest": {
