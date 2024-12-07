@@ -23,16 +23,16 @@
           "Authentication"
         ],
         "operationId": "sendResetToken",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResetTokenRequest"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetTokenRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Reset token sent to your email",
@@ -93,16 +93,16 @@
           "Authentication"
         ],
         "operationId": "resetPassword",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordRequest"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Password reset successfully",
@@ -216,16 +216,16 @@
           "Users"
         ],
         "operationId": "createUser",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/NewUserRequest"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUserRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "201": {
             "description": "User created",
@@ -306,7 +306,9 @@
             "name": "email",
             "in": "query",
             "required": true,
-            "type": "string",
+            "schema": {
+              "type": "string"
+            },
             "description": "Email of the user to retrieve"
           }
         ],
@@ -356,16 +358,16 @@
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ChangePassword"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Password changed successfully",
@@ -426,16 +428,16 @@
           "Authentication"
         ],
         "operationId": "loginUser",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LoginUserRequest"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Login successful",
@@ -714,7 +716,7 @@
       ]
     }
   },
-  "securityDefinitions": {
+  "securitySchemes": {
     "bearerAuth": {
       "type": "apiKey",
       "name": "Authorization",
