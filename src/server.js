@@ -26,7 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // });
 
 app.get('/', (req, res) => {
-  res.json('hello')
+  res.json('hello ther')
 })
 
 app.get('/users', async (req, res) => {

@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "description": "USER API",
     "version": "1.0.0",
@@ -9,15 +9,10 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "basePath": "/api",
-  "schemes": [
-    "http"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "consumes": [
-    "application/json"
+  "servers": [
+    {
+      "url": "/api"
+    }
   ],
   "paths": {
     "/users/send-reset-token": {
@@ -507,77 +502,85 @@
           }
         }
       },
-      "put": {
-        "summary": "Update a user",
-        "description": "Update the details of a user by ID, including optional profile picture upload",
-        "tags": [
-          "Users"
-        ],
-        "operationId": "updateUser",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the user to update"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
+        "put": {
+          "summary": "Update a user",
+          "description": "Update the details of a user by ID, including optional profile picture upload",
+          "tags": [
+            "Users"
+          ],
+          "operationId": "updateUser",
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the user"
+                "type": "string"
+              },
+              "description": "ID of the user to update"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "Username of the user"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "Email address of the user"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "Phone number of the user"
+                    },
+                    "profilePicture": {
+                      "type": "string",
+                      "format": "binary",
+                      "description": "Profile picture file"
+                    }
                   },
-                  "email": {
-                    "type": "string",
-                    "description": "Email of the user"
-                  },
-                  "profilePicture": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Profile picture file"
+                  "required": ["username", "email"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/definitions/User"
                   }
                 }
               }
+            },
+            "400": {
+              "description": "Invalid request parameters, such as missing required fields or invalid file format."
+            },
+            "404": {
+              "description": "User not found for the given ID."
+            },
+            "500": {
+              "description": "Unexpected server error occurred while updating the user."
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/definitions/User"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request parameters"
-          },
-          "404": {
-            "description": "User not found"
-          },
-          "500": {
-            "description": "Internal server error"
           }
         }
       }
-    }
   },
   "definitions": {
     "User": {
