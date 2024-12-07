@@ -584,7 +584,8 @@
         }
       }
   },
-  "definitions": {
+  "components": {
+    "schemas": {
     "User": {
       "type": "object",
       "properties": {
@@ -724,4 +725,5 @@
       "description": "Bearer token authentication"
     }
   }
+}
 }
