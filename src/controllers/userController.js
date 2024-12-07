@@ -170,7 +170,7 @@ const userController = {
         const profilePicture = req.files.profilePicture;
   
         // Validar tipo de arquivo (opcional)
-        const allowedExtensions = /png|jpeg|jpg/;
+        const allowedExtensions = /png|jpeg|jpg|webp/;
         const fileExtension = path.extname(profilePicture.name).toLowerCase();
         if (!allowedExtensions.test(fileExtension)) {
           return res.status(400).json({ message: "Invalid file type. Only PNG, JPEG, and JPG are allowed." });
