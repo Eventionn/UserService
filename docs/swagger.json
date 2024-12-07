@@ -546,7 +546,7 @@
                       "description": "Email address of the user"
                     },
                     "phone": {
-                      "type": "string",
+                      "type": "integer",
                       "description": "Phone number of the user"
                     },
                     "profilePicture": {

@@ -21,7 +21,7 @@ const authController = {
         if (await bcryptjs.compare(password, user.password)) {
     
           const token = jwt.sign({ userID: user.userID, username: user.username, email: user.email, userType: user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
-          return res.status(200).send({ token: token });
+          return res.status(201).send({ token: token });
 
         } else {
           return res.status(400).send("email/password not match");
