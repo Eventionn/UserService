@@ -1,3 +1,4 @@
+import path from 'path';
 import userService from "../services/userService.js";
 import bcryptjs from "bcryptjs";
 import jwt from 'jsonwebtoken';
