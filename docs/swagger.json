@@ -660,7 +660,7 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/User"
+          "$ref": "#/components/schemas/User"
         }
       }
     },
