@@ -12,7 +12,7 @@ const userController = {
 
 
   async changePassword(req, res) {
-    const token = req.headers['token'];
+    const token = req.headers['authorization'];
     const { oldPassword, newPassword } = req.body;
 
     
@@ -85,11 +85,10 @@ const userController = {
 
   async getUserByEmail(req, res) {
     try {
-      const { email } = req.query; 
+      const { email } = req.params;
       if (!email) {
         return res.status(400).json({ message: "Email is required" });
       }
-
       const user = await userService.findUserByEmail(email);
       if (!user) {
         return res.status(404).json({ message: "User not found" });

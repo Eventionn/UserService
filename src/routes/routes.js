@@ -11,14 +11,14 @@ router.use(fileUpload());
 
 router.get('/', verifyToken, verifyAdmin, userController.getAllUsers);
 router.post('/', userController.createUser);
+router.put('/change-password', verifyToken, userController.changePassword);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.post('/send-reset-token', authController.sendResetToken);
 router.post('/reset-password', authController.resetPassword);
 router.get('/:id', userController.getUserById); 
-router.get('/byemail', userController.getUserByEmail); 
+router.get('/byemail/:email', userController.getUserByEmail); 
 router.put('/:id', verifyToken, userController.updateUser);
-router.put('/change-password', verifyToken,userController.changePassword);
 router.patch('/softdelete/:id', userController.softdeleteUser);
 router.delete('/:id', userController.deleteUser);
 
