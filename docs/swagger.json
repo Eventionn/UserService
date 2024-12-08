@@ -553,6 +553,10 @@
                       "type": "string",
                       "format": "binary",
                       "description": "Profile picture file"
+                    },
+                    "userype_id": {
+                      "type": "string",
+                      "description": "User type"
                     }
                   },
                   "required": ["username", "email"]

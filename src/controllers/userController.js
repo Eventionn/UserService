@@ -157,10 +157,10 @@ const userController = {
   async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { username, phone, email } = req.body;
+      const { username, phone, email, usertype_id } = req.body;
     
       const phoneNumber = phone ? parseInt(phone, 10) : null;
-      console.log("phone", phoneNumber)
+
       if (!id) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -191,7 +191,7 @@ const userController = {
         profilePicturePath = `/uploads/profile_pictures/${path.basename(uploadPath)}`;
       }
 
-      const updatedUser = await userService.updateUser(existingUser, { username, phone: phoneNumber, email,profilePicture: profilePicturePath });
+      const updatedUser = await userService.updateUser(existingUser, { username, phone: phoneNumber, email,profilePicture: profilePicturePath, usertype_id });
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error(error);
