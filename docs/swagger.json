@@ -293,7 +293,7 @@
         }
       }
     },
-    "/users/byemail": {
+    "/users/byemail/{email}": {
       "get": {
         "summary": "Get User by Email",
         "description": "Retrieve a user by their email address.",
@@ -304,7 +304,7 @@
         "parameters": [
           {
             "name": "email",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"

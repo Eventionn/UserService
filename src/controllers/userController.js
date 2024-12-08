@@ -12,7 +12,7 @@ const userController = {
 
 
   async changePassword(req, res) {
-    const token = req.headers['token'];
+    const token = req.headers['authorization'];
     const { oldPassword, newPassword } = req.body;
 
     
@@ -22,7 +22,7 @@ const userController = {
     try {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
       console.log("teste", decoded)
-      const user = await userService.findUserByEmail({ email: decoded.email });
+      const user = await userService.findUserByEmail( decoded.email );
 
       if (!user) {
         return res.status(400).send("user not found");
@@ -89,7 +89,6 @@ const userController = {
       if (!email) {
         return res.status(400).json({ message: "Email is required" });
       }
-
       const user = await userService.findUserByEmail(email);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
