@@ -4,12 +4,13 @@ import { fileURLToPath } from 'url';
 import userService from "../services/userService.js";
 import bcryptjs from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from "google-auth-library";
 
+const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const userController = {
-
 
   async changePassword(req, res) {
     const token = req.headers['authorization'];
@@ -142,6 +143,39 @@ const userController = {
 
       console.error(error);
       res.status(500).json({ message: 'Error creating user' });
+    }
+  },
+
+  async registerGoogle(req, res) {
+    try {
+      const { token } = req.body;
+      const ticket = await oAuth2Client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+  
+      const payload = ticket.getPayload();
+      const { sub, email, name, picture } = payload;
+  
+      const existingUser = await userService.findUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).send("User already registered");
+      }
+  
+      const newUser = await userService.createUser({
+        username: name,
+        email,
+        profilePicture: picture,
+        loginType: 'google',
+        usertype_id: defaultUserTypeId,
+        status: true,
+        createdAt: new Date(),
+      });
+  
+      res.status(201).json(newUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error registering with Google' });
     }
   },
 

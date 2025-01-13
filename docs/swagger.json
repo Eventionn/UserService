@@ -236,6 +236,68 @@
         }
       }
     },
+    "/createG": {
+      "post": {
+        "summary": "Create user with google",
+        "description": "Add a new user to the system",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "createUserG",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loginG": {
+      "post": {
+        "summary": "Login User with google",
+        "description": "Authenticate a user with google",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "loginUserG",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Logged",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/softdelete/{id}": {
       "patch": {
         "summary": "Soft Delete User",
@@ -504,230 +566,245 @@
           }
         }
       },
-        "put": {
-          "summary": "Update a user",
-          "description": "Update the details of a user by ID, including optional profile picture upload",
-          "tags": [
-            "Users"
-          ],
-          "operationId": "updateUser",
-          "consumes": [
-            "multipart/form-data"
-          ],
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "ID of the user to update"
-            }
-          ],
-          "requestBody": {
+      "put": {
+        "summary": "Update a user",
+        "description": "Update the details of a user by ID, including optional profile picture upload",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "updateUser",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
             "required": true,
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "username": {
-                      "type": "string",
-                      "description": "Username of the user"
-                    },
-                    "email": {
-                      "type": "string",
-                      "description": "Email address of the user"
-                    },
-                    "phone": {
-                      "type": "integer",
-                      "description": "Phone number of the user"
-                    },
-                    "profilePicture": {
-                      "type": "string",
-                      "format": "binary",
-                      "description": "Profile picture file"
-                    },
-                    "userype_id": {
-                      "type": "string",
-                      "description": "User type"
-                    }
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the user to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Username of the user"
                   },
-                  "required": ["username", "email"]
+                  "email": {
+                    "type": "string",
+                    "description": "Email address of the user"
+                  },
+                  "phone": {
+                    "type": "integer",
+                    "description": "Phone number of the user"
+                  },
+                  "profilePicture": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Profile picture file"
+                  },
+                  "userype_id": {
+                    "type": "string",
+                    "description": "User type"
+                  }
+                },
+                "required": [
+                  "username",
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "User updated successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/User"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Invalid request parameters, such as missing required fields or invalid file format."
-            },
-            "404": {
-              "description": "User not found for the given ID."
-            },
-            "500": {
-              "description": "Unexpected server error occurred while updating the user."
-            }
+          "400": {
+            "description": "Invalid request parameters, such as missing required fields or invalid file format."
+          },
+          "404": {
+            "description": "User not found for the given ID."
+          },
+          "500": {
+            "description": "Unexpected server error occurred while updating the user."
           }
         }
       }
+    }
   },
   "components": {
     "schemas": {
-    "User": {
-      "type": "object",
-      "properties": {
-        "userID": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "phone": {
-          "type": "integer"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "status": {
-          "type": "boolean"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "loginType": {
-          "type": "string"
-        }
-      }
-    },
-    "ResetTokenRequest": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "example": "user@example.com"
+      "User": {
+        "type": "object",
+        "properties": {
+          "userID": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "loginType": {
+            "type": "string"
+          }
         }
       },
-      "required": [
-        "email"
-      ]
-    },
-    "ResetPasswordRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "type": "string",
-          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "ResetTokenRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          }
         },
-        "newPassword": {
-          "type": "string",
-          "example": "newSecurePassword123!"
+        "required": [
+          "email"
+        ]
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "newSecurePassword123!"
+          }
+        },
+        "required": [
+          "token",
+          "newPassword"
+        ]
+      },
+      "ChangePassword": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
         }
       },
-      "required": [
-        "token",
-        "newPassword"
-      ]
-    },
-    "ChangePassword": {
-      "type": "object",
-      "properties": {
-        "oldPassword": {
-          "type": "string"
-        },
-        "newPassword": {
-          "type": "string"
-        }
-      }
-    },
-    "UserResponse": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/components/schemas/User"
-        }
-      }
-    },
-    "NewUserRequest": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
         }
       },
-      "required": [
-        "username",
-        "email",
-        "password"
-      ]
-    },
-    "UpdateUserRequest": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
+      "NewUserRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
         },
-        "phone": {
-          "type": "integer"
+        "required": [
+          "username",
+          "email",
+          "password"
+        ]
+      },
+      "GoogleAuthRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Google ID token used for authentication"
+          }
         },
-        "email": {
-          "type": "string"
-        },
-        "profilePicture": {
-          "type": "string",
-          "format": "binary"
-        }
-      }
-    },
-    "LoginUserRequest": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
+        "required": [
+          "token"
+        ]
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "binary"
+          }
         }
       },
-      "required": [
-        "email",
-        "password"
-      ]
-    }
-  },
-  "securitySchemes": {
-    "bearerAuth": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header",
-      "description": "Bearer token authentication"
+      "LoginUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Bearer token authentication"
+      }
     }
   }
-}
 }

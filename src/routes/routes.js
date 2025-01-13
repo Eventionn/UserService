@@ -11,8 +11,10 @@ router.use(fileUpload());
 
 router.get('/', verifyToken, verifyAdmin, userController.getAllUsers);
 router.post('/', userController.createUser);
+router.post('/createG', userController.registerGoogle);
 router.put('/change-password', verifyToken, userController.changePassword);
 router.post('/login', authController.login);
+router.post('/loginG', authController.loginGoogle);
 router.post('/logout', authController.logout);
 router.post('/send-reset-token', authController.sendResetToken);
 router.post('/reset-password', authController.resetPassword);

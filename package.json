@@ -19,6 +19,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.5.1",
     "faker": "^6.6.6",
+    "google-auth-library": "^9.15.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
     "redis": "^4.7.0",

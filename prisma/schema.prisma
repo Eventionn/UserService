@@ -13,10 +13,10 @@ generator client {
 
 model User {
   userID      String   @id @default(uuid()) @db.Uuid
-  username    String   @db.VarChar(20)
+  username    String   @db.VarChar(40)
   phone       Int?     
   email       String   @db.VarChar(50) @unique
-  password    String   @db.VarChar(255)
+  password    String?   @db.VarChar(255)
   status      Boolean  @default(true) 
   createdAt   DateTime @default(now())
   loginType   String   

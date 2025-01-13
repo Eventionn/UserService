@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import userService from "../services/userService.js";
 import mailService from "../services/mailService.js";
 import redis from 'redis';
+import { OAuth2Client }  from "google-auth-library";
+
+const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const redisClient = redis.createClient({
   url: "redis://userservice-redis-service:6379",
@@ -10,23 +13,57 @@ const redisClient = redis.createClient({
 
 redisClient.connect();
 
+
 const authController = {
-    async login(req, res) {
-        const { email, password } = req.body;
+      async login(req, res) {
+          const { email, password } = req.body;
 
-        const user = await userService.findUserByEmail(email);
-        if (!user)
-          return res.status(400).send("user not found");
-    
-        if (await bcryptjs.compare(password, user.password)) {
-    
-          const token = jwt.sign({ userID: user.userID, username: user.username, email: user.email, userType: user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
-          return res.status(201).send({ token: token });
+          const user = await userService.findUserByEmail(email);
+          if (!user)
+            return res.status(400).send("user not found");
+      
+          if (await bcryptjs.compare(password, user.password)) {
+      
+            const token = jwt.sign({ userID: user.userID, username: user.username, email: user.email, userType: user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+            return res.status(201).send({ token: token });
 
-        } else {
-          return res.status(400).send("email/password not match");
-        }
-      },
+          } else {
+            return res.status(400).send("email/password not match");
+          }
+        },
+
+        async loginGoogle(req, res) {
+          try {
+            const { token } = req.body;
+            const ticket = await oAuth2Client.verifyIdToken({
+              idToken: token,
+              audience: process.env.GOOGLE_CLIENT_ID,
+            });
+        
+            const payload = ticket.getPayload();
+            const { sub, email, name, picture } = payload;
+        
+            let user = await userService.findUserByEmail(email);
+        
+            if (!user) {
+              user = await userService.createUser({
+                username: name,
+                email,
+                profilePicture: picture,
+                loginType: 'google',
+                usertype_id: defaultUserTypeId,
+                status: true,
+                createdAt: new Date(),
+              });
+            }
+        
+            const jwttoken = jwt.sign({ userID: user.userID, username: user.username, email: user.email, userType: user.usertype_id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+            return res.status(201).send({ token: jwttoken });
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error logging in with Google' });
+          }
+        },
 
       async sendResetToken(req, res) {
         const { email } = req.body;
