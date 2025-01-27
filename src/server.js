@@ -47,7 +47,7 @@ app.get('/users', async (req, res) => {
 //  console.log(`listening on port ${PORT}`)
 //})
 
-//export { app, server };
+export { app /*, server*/ };
 
 // Criar servidor HTTPS
 https.createServer({ 
