@@ -43,17 +43,17 @@ app.get('/users', async (req, res) => {
   }
 })
 
-const server = app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`)
-})
+//const server = app.listen(PORT, () => {
+//  console.log(`listening on port ${PORT}`)
+//})
 
 export { app /*, server*/ };
 
 // Criar servidor HTTPS
-//https.createServer({ 
-//  key, 
-//  cert, 
-//  passphrase: 'benfica' // passphrase
-//}, app).listen(PORT, () => {
-//  console.log(`HTTPS server listening on port ${PORT}`);
-//});
+https.createServer({ 
+  key, 
+  cert, 
+  passphrase: 'benfica' // passphrase
+}, app).listen(PORT, () => {
+  console.log(`HTTPS server listening on port ${PORT}`);
+});
