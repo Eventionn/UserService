@@ -5,11 +5,16 @@ import fs from 'fs';
 import path from 'path';
 import Routes from "./routes/routes.js";
 import swaggerUi from "swagger-ui-express"; 
+import https from 'https';
 
 const app = express()
 app.use(express.json());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
+
+// Ler certificados SSL/TLS
+const key = fs.readFileSync(path.resolve('/usr/src/app/key.pem'));
+const cert = fs.readFileSync(path.resolve('/usr/src/app/cert.pem'));
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -44,9 +49,17 @@ app.get('/users', async (req, res) => {
   }
 })
 
-const server = app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`)
-})
+//const server = app.listen(PORT, () => {
+//  console.log(`listening on port ${PORT}`)
+//})
 
-export { app, server };
+export { app /*, server*/ };
 
+// Criar servidor HTTPS
+https.createServer({ 
+  key, 
+  cert, 
+  passphrase: 'benfica' // passphrase
+}, app).listen(PORT, () => {
+  console.log(`HTTPS server listening on port ${PORT}`);
+});
