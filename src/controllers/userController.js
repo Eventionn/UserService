@@ -63,14 +63,9 @@ const userController = {
   //
 
   async getMyProfile(req, res) {
-    const token = req.headers['authorization'];
-    
-    if (!token) {
-      return res.status(400).send("token are required");
-    }
+  const userID = req.user.userID;
     try {
-      const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      const user = await userService.findUserById( decoded.userID );
+      const user = await userService.findUserById( userID );
 
       if (!user) {
         return res.status(400).send("user not found");
