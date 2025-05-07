@@ -61,6 +61,29 @@ const userController = {
     }
   },
   //
+
+  async getMyProfile(req, res) {
+    const token = req.headers['authorization'];
+    
+    if (!token) {
+      return res.status(400).send("token are required");
+    }
+    try {
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      const user = await userService.findUserById( decoded.userID );
+
+      if (!user) {
+        return res.status(400).send("user not found");
+      }
+
+
+     res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("Server Error");
+    }
+  },
+
   async getUserById(req, res) {
     try {
       const { id } = req.params;
