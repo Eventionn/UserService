@@ -64,11 +64,12 @@ const userController = {
 
   async getMyProfile(req, res) {
   const userID = req.user.userID;
+  console.log(req.user);
     try {
-      const user = await userService.findUserById( userID );
+      const user = await userService.findUserById(userID);
 
       if (!user) {
-        return res.status(400).send("user not found");
+        return res.status(400).send("User not found");
       }
 
 
