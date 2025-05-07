@@ -63,8 +63,9 @@ const userController = {
   //
 
   async getMyProfile(req, res) {
+    
   const userID = req.user.userID;
-  console.log(userID);
+  console.log("USERID", userID);
     try {
       const user = await userService.findUserById(userID);
 
