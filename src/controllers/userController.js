@@ -187,7 +187,7 @@ const userController = {
   async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { username, phone, email, usertype_id } = req.body;
+      const { username, phone, email, usertype_id, status } = req.body;
     
       const phoneNumber = phone ? parseInt(phone, 10) : null;
 
@@ -221,7 +221,19 @@ const userController = {
         profilePicturePath = `/uploads/profile_pictures/${path.basename(uploadPath)}`;
       }
 
-      const updatedUser = await userService.updateUser(existingUser, { username, phone: phoneNumber, email,profilePicture: profilePicturePath, usertype_id });
+      if (typeof status !== 'undefined') {
+        status = status === 'true' || status === true;
+      }  
+
+    const updatedUser = await userService.updateUser(existingUser, {
+      username,
+      phone: phoneNumber,
+      email,
+      profilePicture: profilePicturePath,
+      usertype_id,
+      ...(typeof status !== 'undefined' && { status })
+    });
+
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error(error);
