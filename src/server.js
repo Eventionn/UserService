@@ -2,7 +2,8 @@ import express from "express"
 import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv";
 import fs from 'fs';
-import path from 'path';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import Routes from "./routes/routes.js";
 import swaggerUi from "swagger-ui-express"; 
 import https from 'https';
@@ -13,6 +14,9 @@ app.use(express.json());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // Ler certificados SSL/TLS
 const key = fs.readFileSync(path.resolve('/usr/src/app/key.pem'));
 const cert = fs.readFileSync(path.resolve('/usr/src/app/cert.pem'));
@@ -22,6 +26,8 @@ app.use(cors({
   credentials: true
 }));
 app.options('*', cors());
+
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 app.use('/api/users', Routes);
 const prisma = new PrismaClient();
