@@ -4,7 +4,11 @@ const prisma = new PrismaClient();
 
 const userService = {
   async getAllUsers() {
-    return await prisma.user.findMany(); 
+    return await prisma.user.findMany({
+      include: {
+        userType: true, 
+      },
+    });
   },
 
   async createUser(userData) {
