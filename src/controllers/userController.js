@@ -221,18 +221,18 @@ const userController = {
         profilePicturePath = `/uploads/profile_pictures/${path.basename(uploadPath)}`;
       }
 
-      if (typeof status !== 'undefined') {
-        status = status === 'true' || status === true;
-      }  
+      const parsedStatus = (typeof status !== 'undefined')
+      ? (status === 'true' || status === true)
+      : undefined;
 
-    const updatedUser = await userService.updateUser(existingUser, {
-      username,
-      phone: phoneNumber,
-      email,
-      profilePicture: profilePicturePath,
-      usertype_id,
-      ...(typeof status !== 'undefined' && { status })
-    });
+      const updatedUser = await userService.updateUser(existingUser, {
+        username,
+        phone: phone ? parseInt(phone, 10) : null,
+        email,
+        profilePicture: profilePicturePath,
+        usertype_id,
+        ...(typeof parsedStatus !== 'undefined' && { status: parsedStatus })
+      });      
 
       res.status(200).json(updatedUser);
     } catch (error) {
