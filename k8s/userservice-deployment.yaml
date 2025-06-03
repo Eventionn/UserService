@@ -38,3 +38,7 @@ spec:
         volumeMounts:
           - name: userservice-images
             mountPath: /usr/src/app/public/uploads/profile_pictures
+      volumes:
+        - name: userservice-images
+          persistentVolumeClaim:
+            claimName: userservice-images-pvc
