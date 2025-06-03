@@ -27,7 +27,7 @@ app.use(cors({
 }));
 app.options('*', cors());
 
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/uploads', express.static('/usr/src/app/public/uploads'));
 
 app.use('/api/users', Routes);
 const prisma = new PrismaClient();

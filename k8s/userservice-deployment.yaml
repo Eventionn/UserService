@@ -35,3 +35,6 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
+        volumeMounts:
+          - name: userservice-images
+            mountPath: /usr/src/app/public/uploads/profile_pictures
