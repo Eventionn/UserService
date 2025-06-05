@@ -11,6 +11,7 @@ router.use(fileUpload());
 
 router.get('/', verifyToken, verifyAdmin, userController.getAllUsers);
 router.post('/', userController.createUser);
+router.get('/paginated', verifyToken, userController.getUsersPaginated);
 router.post('/createG', userController.registerGoogle);
 router.put('/change-password', verifyToken, userController.changePassword);
 router.get('/my-profile', verifyToken, userController.getMyProfile);

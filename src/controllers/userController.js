@@ -60,7 +60,27 @@ const userController = {
       res.status(500).json({ message: 'Error fetching users' });
     }
   },
-  //
+
+  /**
+  * Get all users by page
+  * @route {GET} /usersPaginated
+  * @returns {Array} List of events
+  * @description Fetches users from the database.
+  */
+  async getUsersPaginated(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || null;
+
+    try {
+      const result = await userService.findUsersPaginated(page, limit, search);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching users' });
+    }
+  },
+
 
   async getMyProfile(req, res) {
 
