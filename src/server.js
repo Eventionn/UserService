@@ -22,8 +22,7 @@ const key = fs.readFileSync(path.resolve('/usr/src/app/key.pem'));
 const cert = fs.readFileSync(path.resolve('/usr/src/app/cert.pem'));
 
 app.use(cors({
-  origin: '*',
-  credentials: true
+  origin: '*'
 }));
 app.options('*', cors());
 
