@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: userservice-images-pv
+  labels:
+    app: userservice
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data/userservice-images"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: userservice-images-pvc
+  labels:
+    app: userservice
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
