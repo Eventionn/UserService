@@ -51,7 +51,7 @@ const authController = {
                 email,
                 profilePicture: picture,
                 loginType: 'google',
-                usertype_id: defaultUserTypeId,
+                usertype_id: '2c6aab42-7274-424e-8c10-e95441cb95c3',
                 status: true,
                 createdAt: new Date(),
               });
