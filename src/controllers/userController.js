@@ -32,7 +32,9 @@ const userController = {
       if (await bcryptjs.compare(oldPassword, user.password)) {
         const passwordHash = await bcryptjs.hash(newPassword, 10);
 
-        await userService.updateUser(user, { username: user.username }, { password: passwordHash });
+        //await userService.updateUser(user, { username: user.username }, { password: passwordHash });
+        await userService.updateUser(user, { password: passwordHash });
+
 
         return res.status(200).send("password changed");
       } else {
