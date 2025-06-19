@@ -67,50 +67,80 @@ const authController = {
 
       async sendResetToken(req, res) {
         const { email } = req.body;
-      
-        if (!email) return res.status(400).send("Email is required");
-      
+
+        if (!email) {
+          return res.status(400).json({
+            success: false,
+            message: "Email is required"
+          });
+        }
+
         try {
           const user = await userService.findUserByEmail(email);
-      
-          if (!user) return res.status(404).send("User not found");
-      
+
+          if (!user) {
+            return res.status(404).json({
+              success: false,
+              message: "User not found"
+            });
+          }
+
           const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h" });
-      
+
           await mailService.sendEmail({
             to: email,
             subject: "Password Reset",
             text: `Use this token to reset your password: ${token}`,
           });
-      
-          return res.status(200).send("Reset token sent to your email");
+
+          return res.status(200).json({
+            success: true,
+            message: "Reset token sent to your email"
+          });
         } catch (error) {
           console.error(error);
-          return res.status(500).send("Error sending reset token");
+          return res.status(500).json({
+            success: false,
+            message: "Error sending reset token"
+          });
         }
       },
       
       async resetPassword(req, res) {
         const { token, newPassword } = req.body;
-      
+
         if (!token || !newPassword) {
-          return res.status(400).send("Token and new password are required");
+          return res.status(400).json({
+            success: false,
+            message: "Token and new password are required"
+          });
         }
-      
+
         try {
           const decoded = jwt.verify(token, process.env.SECRET_KEY);
           const email = decoded.email;
-          const user = await userService.findUserByEmail( email );
-      
-          if (!user) return res.status(404).send("User not found");
-      
+          const user = await userService.findUserByEmail(email);
+
+          if (!user) {
+            return res.status(404).json({
+              success: false,
+              message: "User not found"
+            });
+          }
+
           const hashedPassword = await bcryptjs.hash(newPassword, 10);
           await userService.updateUser(user, { password: hashedPassword });
-      
-          return res.status(200).send("Password reset successfully");
+
+          return res.status(200).json({
+            success: true,
+            message: "Password reset successfully"
+          });
         } catch (error) {
           console.error(error);
-          return res.status(400).send("Invalid or expired token");
+          return res.status(400).json({
+            success: false,
+            message: "Invalid or expired token"
+          });
         }
       },
 
