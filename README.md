@@ -19,9 +19,16 @@ node prisma/seed.js
 Habilitar o Metrics Server para coletar métricas:
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
+- Add the secret for Password Reset Email
 
+Criar secret:
+kubectl create secret generic email-secret --from-literal=EMAIL_USER=example@mail.com --from-literal="EMAIL_PASS=password"
 
+Habilitar secret no deployment:
+kubectl set env deployment/userservice-deployment --from=secret/email-secret
 
+Restart do deployment:
+kubectl rollout restart deployment/userservice-deployment  
 
 
 ## Tech & framework used
